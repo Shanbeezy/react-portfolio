@@ -1,4 +1,4 @@
-import { removeHyphensAndCapitalize } from '../../../utils/helpers';
+import { removeHyphensAndCapitalize } from '../../utils/helpers';
 import * as projects from '../../assets';
 
 function Project({ project }) {
