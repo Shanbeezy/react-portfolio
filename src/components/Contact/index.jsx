@@ -1,5 +1,6 @@
 import { useState } from 'react';
-
+import axios from 'axios';
+import { sendEmail } from '../../services/api';
 import { validateEmail } from '../../utils/helpers';
 
 function Contact() {
@@ -12,12 +13,30 @@ function Contact() {
   const [errorMessage, setErrorMessage] = useState('');
   const { name, email, message } = formState;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!errorMessage) {
-      console.log('Submit Form', formState);
+      try {
+        const response = await sendEmail(formState);
+        alert('Message sent successfully');
+        console.log('Response:', response);
+      } catch (error) {
+        console.error('Error sending message', error);
+        alert('Failed to send message');
+      }
     }
   };
+
+  const sendEmail = async (FormData) => {
+    try {
+      const response = await axios.post('http://localhost:3001/send', FormData);
+      console.log('Message sent successfully:', response.data);
+      // Handle success response
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // Handle error
+    }
+  }
 
   const handleChange = (e) => {
     if (e.target.name === 'email') {
