@@ -1,88 +1,41 @@
 import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 
-
-// (function () {
-//   emailjs.init({
-//     publicKey: 'biOJspmimtBQ47tB6',
-//    // privateKey: '7q6pLakOezFE6vkP1qIa7'
-//   });
-//   console.log(emailjs);
-// })();
-
-// console.log('test emailjs');
-
-
-// var templateParams = {
-//   name: 'James',
-//   notes: 'Check this out!',
-// };
-
-// emailjs.send('service_dw9ukb2', 'template_n8y4f1z', templateParams).then(
-//   function (response) {
-//     console.log('SUCCESS!', response.status, response.text);
-//   },
-//   function (err) {
-//     console.log('FAILED...', err);
-//   },
-// );
-
-
-
-// import emailjs from '@emailjs/nodejs';
-
-// // set Public Key as global settings
-// emailjs.init({
-//   publicKey: '5Insgb5sLxOaJXWmq',
-//   privateKey: '7q6pLakOezFE6vkP1qIa7', // optional, highly recommended for security reasons
-// });
-
-
-// emailjs.send('service_dw9ukb2', 'template_n8y4f1z').then(
-//   (response) => {
-//     console.log('SUCCESS!', response.status, response.text);
-//   },
-//   (err) => {
-//     console.log('FAILED...', err);
-//   },
-// );
-
-
 const Contact = () => {
   const form = useRef();
 
   const sendEmail = (e) => {
     e.preventDefault();
 
-    let  publicKey = 'Fmx7yPqFUl5HEF6fb';
+    const publicKey = '1OjFlAb8N3CpNCmAj'; // Updated public key
 
-    emailjs
-      .sendForm('service_dw9ukb2', 'template_n8y4f1z', form.current, {
-        // publicKey: 'Fmx7yPqFUl5HEF6fb',
-      })
+    // Add console logs to check the form data
+    console.log('Form Data:', form.current);
+
+    emailjs.sendForm('service_dw9ukb2', 'template_n8y4f1z', form.current, publicKey)
       .then(
-        () => {
-          console.log('SUCCESS!');
+        (result) => {
+          console.log('SUCCESS!', result.status, result.text);
+          alert('Message sent successfully');
         },
         (error) => {
-          console.log('FAILED...', error.text);
-        },
-        
+          console.error('FAILED...', error);
+          alert('Failed to send message');
+        }
       );
-      console.log(publicKey);
   };
 
   return (
     <form ref={form} onSubmit={sendEmail}>
       <label>Name</label>
-      <input type="text" name="name" />
+      <input type="text" name="name" required />
       <label>Email</label>
-      <input type="email" name="email" />
+      <input type="email" name="email" required />
       <label>Message</label>
-      <textarea name="message" />
+      <textarea name="message" required />
       <input type="submit" value="Send" />
     </form>
   );
-}
+};
 
 export default Contact;
