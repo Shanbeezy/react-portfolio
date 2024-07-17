@@ -1,102 +1,87 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { sendEmail } from '../../services/api';
-import { validateEmail } from '../../utils/helpers';
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
-function Contact() {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
 
-  const [errorMessage, setErrorMessage] = useState('');
-  const { name, email, message } = formState;
+// (function () {
+//   emailjs.init({
+//     publicKey: 'biOJspmimtBQ47tB6',
+//    // privateKey: '7q6pLakOezFE6vkP1qIa7'
+//   });
+//   console.log(emailjs);
+// })();
 
-  const handleSubmit = async (e) => {
+// console.log('test emailjs');
+
+
+// var templateParams = {
+//   name: 'James',
+//   notes: 'Check this out!',
+// };
+
+// emailjs.send('service_dw9ukb2', 'template_n8y4f1z', templateParams).then(
+//   function (response) {
+//     console.log('SUCCESS!', response.status, response.text);
+//   },
+//   function (err) {
+//     console.log('FAILED...', err);
+//   },
+// );
+
+
+
+// import emailjs from '@emailjs/nodejs';
+
+// // set Public Key as global settings
+// emailjs.init({
+//   publicKey: '5Insgb5sLxOaJXWmq',
+//   privateKey: '7q6pLakOezFE6vkP1qIa7', // optional, highly recommended for security reasons
+// });
+
+
+// emailjs.send('service_dw9ukb2', 'template_n8y4f1z').then(
+//   (response) => {
+//     console.log('SUCCESS!', response.status, response.text);
+//   },
+//   (err) => {
+//     console.log('FAILED...', err);
+//   },
+// );
+
+
+const Contact = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
     e.preventDefault();
-    if (!errorMessage) {
-      try {
-        const response = await sendEmail(formState);
-        alert('Message sent successfully');
-        console.log('Response:', response);
-      } catch (error) {
-        console.error('Error sending message', error);
-        alert('Failed to send message');
-      }
-    }
-  };
 
-  const sendEmail = async (FormData) => {
-    try {
-      const response = await axios.post('http://localhost:3001/send', FormData);
-      console.log('Message sent successfully:', response.data);
-      // Handle success response
-    } catch (error) {
-      console.error('Error sending message:', error);
-      // Handle error
-    }
-  }
+    let  publicKey = 'Fmx7yPqFUl5HEF6fb';
 
-  const handleChange = (e) => {
-    if (e.target.name === 'email') {
-      const isValid = validateEmail(e.target.value);
-      if (!isValid) {
-        setErrorMessage('Your email is invalid.');
-      } else {
-        setErrorMessage('');
-      }
-    } else {
-      if (!e.target.value.length) {
-        setErrorMessage(`${e.target.name} is required.`);
-      } else {
-        setErrorMessage('');
-      }
-    }
-    if (!errorMessage) {
-      setFormState({ ...formState, [e.target.name]: e.target.value });
-      console.log('Handle Form', formState);
-    }
+    emailjs
+      .sendForm('service_dw9ukb2', 'template_n8y4f1z', form.current, {
+        // publicKey: 'Fmx7yPqFUl5HEF6fb',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+        },
+        
+      );
+      console.log(publicKey);
   };
 
   return (
-    <section>
-      <form id="contact-form" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            name="name"
-            defaultValue={name}
-            onBlur={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email address:</label>
-          <input
-            type="email"
-            name="email"
-            defaultValue={email}
-            onBlur={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="message">Message:</label>
-          <textarea
-            name="message"
-            rows="5"
-            defaultValue={message}
-            onBlur={handleChange}
-          />
-        </div>
-        {errorMessage && (
-          <div>
-            <p className="error-text">{errorMessage}</p>
-          </div>
-        )}
-        <button type="submit">Submit</button>
-      </form>
-    </section>
+    <form ref={form} onSubmit={sendEmail}>
+      <label>Name</label>
+      <input type="text" name="name" />
+      <label>Email</label>
+      <input type="email" name="email" />
+      <label>Message</label>
+      <textarea name="message" />
+      <input type="submit" value="Send" />
+    </form>
   );
 }
 
