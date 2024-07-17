@@ -5,7 +5,7 @@ This is a place for me to share all of the projects that I have done so far in m
 
 ## Visuals
 ![React Portfolio Screenshot](<React Portfolio.png>)
-deployed app link: 
+deployed app link: https://amazing-chaja-856bc1.netlify.app/portfolio
 
 ## Installation
 To install necessary dependencies you would have to implement npm install
